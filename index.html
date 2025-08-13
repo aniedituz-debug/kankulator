@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulyator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: url('https://i.postimg.cc/TpKTw9Td/Picsart-25-07-25-12-05-55-049.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .calculator {
+            background: #fff;
+            padding: 24px;
+            border-radius: 24px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            border: 1px solid #e5e7eb;
+            max-width: 340px;
+            width: 100%;
+        }
+        .display {
+            background: #1f2937;
+            color: #fff;
+            text-align: right;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            min-height: 56px;
+            font-size: 2rem;
+            word-break: break-all;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .btn {
+            padding: 18px 0;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            background: #f3f4f6;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn.operator {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+        .btn.equal {
+            background: #4f46e5;
+            color: #fff;
+            grid-column: span 2;
+        }
+        .btn.clear {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div id="display" class="display">0</div>
+        <div class="buttons">
+            <button class="btn clear" onclick="clearDisplay()">C</button>
+            <button class="btn" onclick="backspace()">&larr;</button>
+            <button class="btn operator" onclick="appendOperator('%')">%</button>
+            <button class="btn operator" onclick="appendOperator('/')">÷</button>
+            <button class="btn" onclick="appendNumber('7')">7</button>
+            <button class="btn" onclick="appendNumber('8')">8</button>
+            <button class="btn" onclick="appendNumber('9')">9</button>
+            <button class="btn operator" onclick="appendOperator('*')">×</button>
+            <button class="btn" onclick="appendNumber('4')">4</button>
+            <button class="btn" onclick="appendNumber('5')">5</button>
+            <button class="btn" onclick="appendNumber('6')">6</button>
+            <button class="btn operator" onclick="appendOperator('-')">−</button>
+            <button class="btn" onclick="appendNumber('1')">1</button>
+            <button class="btn" onclick="appendNumber('2')">2</button>
+            <button class="btn" onclick="appendNumber('3')">3</button>
+            <button class="btn operator" onclick="appendOperator('+')">+</button>
+            <button class="btn" onclick="appendNumber('0')">0</button>
+            <button class="btn" onclick="appendNumber('.')">.</button>
+            <button class="btn equal" onclick="calculateResult()">=</button>
+        </div>
+    </div>
+    <script>
+        let display = document.getElementById('display');
+        let current = '0';
+        let resetNext = false;
+
+        function updateDisplay() {
+            display.textContent = current;
+        }
+
+        function appendNumber(num) {
+            if (resetNext) {
+                current = '';
+                resetNext = false;
+            }
+            if (current === '0' && num !== '.') {
+                current = num;
+            } else {
+                current += num;
+            }
+            updateDisplay();
+        }
+
+        function appendOperator(op) {
+            if (/[+\-*/%]$/.test(current)) {
+                current = current.slice(0, -1) + op;
+            } else {
+                current += op;
+            }
+            resetNext = false;
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            current = '0';
+            updateDisplay();
+        }
+
+        function backspace() {
+            if (current.length > 1) {
+                current = current.slice(0, -1);
+            } else {
+                current = '0';
+            }
+            updateDisplay();
+        }
+
+        function calculateResult() {
+            try {
+                let result = eval(current.replace(/%/g, '/100'));
+                current = result.toString();
+                resetNext = true;
+            } catch {
+                current = 'Error';
+                resetNext = true;
+            }
+            updateDisplay();
+        }
+    </script> 
+</body>
+</html>       
